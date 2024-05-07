@@ -1,0 +1,46 @@
+﻿@page "/prdApi/allproduct"
+
+<h3>All Products</h3>
+<hr />
+
+<div class="row">
+    @if (products != null)
+    {
+        @foreach (var product in products)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <img src="/img/@product.Image" style="width:100px" />
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">Price: @product.Price$</p>
+                        <p class="card-text">@product.Description</p>
+                        <p class="card-text">Category Num. @product.CatId</p>
+                        <a href="/prdApi/details/@product.Id" class="btn btn-dark">Details</a>
+                        <a href="/prdApi/Edit/@product.Id" class="btn btn-warning">Edit</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Loading products...</p>
+    }
+</div>
+
+@code {
+    [Inject]
+    public IService<Product> productService { set; get; }
+    [Inject]
+    public IService<Category> categoryService { set; get; }
+
+    public List<Category> categories { set; get; }
+    public List<Product> products { set; get; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await productService.GetAll();
+        categories =await categoryService.GetAll();
+    }
+}

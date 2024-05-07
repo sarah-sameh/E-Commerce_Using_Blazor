@@ -1,0 +1,39 @@
+﻿@page "/produc/details/{id:int}"
+
+<h3>ProductDetailsComponent</h3>
+<PageTitle>Product Details</PageTitle>
+
+<div class="card shadow" style="width:500px">
+    <div class="card-body">
+        <img src="/img/@product.Image" style="width:100px" />
+        <h3 class="card-title">@product.Name</h3>
+        <h3 class="card-subtitle mb-2 text-muted">Price: @product.Price$</h3>
+        <p class="card-text">Desctiption: @product.Description</p>
+        <p class="card-text" style="font-weight:700; font-style:italic">Category Name: @categoryService.GetCategoryName(product.CatId)</p>
+    </div>
+    <a href="/produc/allproduct/" class="btn btn-warning">Back To Home</a>
+</div>
+
+@code {
+    [Parameter]
+    public int id{ set; get; }
+
+    [Inject]
+    public ProductService productService { set; get; }
+
+    public Product product{ set; get; }
+
+    [Inject]
+    public CategoryService categoryService{ set; get; }
+
+    public List<Category> categories{ set; get; }
+
+    protected override void OnInitialized()
+    {
+
+        product = productService.GetProductById(id);
+        categories = categoryService.GetAllCategories(); 
+        base.OnInitialized();
+
+    }
+}

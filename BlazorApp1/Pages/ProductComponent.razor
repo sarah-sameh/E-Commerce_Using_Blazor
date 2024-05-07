@@ -1,0 +1,58 @@
+﻿@page "/Product"
+<h3>Products</h3>
+<hr />
+<br/>
+<div>
+    <select class="form-select" @bind="filteredProductId" style="width:500px ; display:inline">
+        @foreach (var prod in products)
+        {
+            <option value="@prod.Id">@prod.Name</option>
+        }
+    </select>
+    <button class="btn btn-dark" @onclick="ShowDetails">Show Details</button>
+</div>
+
+<br/>
+
+
+@if (filteredProduct != null)
+{
+    <div class="card shadow" style="width: 24rem;">
+
+        <div class="card-body">
+           <h1>Product Details</h1>
+           <hr/>
+            <h5 class="card-text"><bold>Name:</bold> @filteredProduct.Name</h5>
+            <h5 class="card-text"><bold>Price:</bold> @filteredProduct.Price</h5>
+            <h5 class="card-text"><bold>Description: </bold> @filteredProduct.Description</h5>
+        </div>
+      </div>
+
+}
+
+
+@code {
+    public List<Product> products { get; set; }
+    public int filteredProductId { get; set; }
+    public Product filteredProduct { get; set; }
+
+    public ProductComponent()
+    {
+        
+        products = new List<Product>
+        {
+            new Product { Id = 1, Name = "Phone", Price = 5400 , Description="nice"},
+            new Product { Id = 2, Name = "LabTop", Price = 6500 ,Description="good"},
+            new Product { Id = 3, Name = "TV", Price = 8750 ,Description="very good"},
+            new Product { Id = 4, Name = "Camera", Price = 5800 ,Description="nnice"},
+            new Product { Id = 5, Name = "Watch", Price = 9000,Description="breaty" },
+            new Product { Id = 6, Name = "AirPods", Price = 7000 ,Description="good"}
+        };
+    }
+
+    public void ShowDetails()
+    {
+        
+        filteredProduct = products.FirstOrDefault(p => p.Id == filteredProductId);
+    }
+}

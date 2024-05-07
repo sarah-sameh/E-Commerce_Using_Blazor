@@ -1,0 +1,39 @@
+﻿@page "/prdApi/details/{id:int}"
+
+<h3>ProductDetailsApiComponent</h3>
+
+@if (product != null)
+{
+    <div class="card shadow" style="width:500px">
+        <div class="card-body">
+            <img src="/img/@product.Image" style="width:100px" />
+            <h3 class="card-title">@product.Name</h3>
+            <h3 class="card-subtitle mb-2 text-muted">Price: @product.Price$</h3>
+            <p class="card-text">Description: @product.Description</p>
+
+        </div>
+        <a href="/prdApi/allproduct/" class="btn btn-warning">Back To Home</a>
+    </div>
+}
+else
+{
+    <p>Loading product...</p>
+}
+@code {
+    [Parameter]
+    public int id { set; get; }
+
+    [Inject]
+    public IService<Product> productService { set; get; }
+
+    public Product product { set; get; }
+
+   
+
+    protected override async Task OnInitializedAsync()
+    {
+        product = await productService.GetById(id);
+       
+        base.OnInitializedAsync();
+    }
+}

@@ -1,0 +1,78 @@
+﻿@page "/produc/Edit/{id:int}"
+@inject NavigationManager navManager
+
+
+<PageTitle>Edit Product</PageTitle>
+<h3>Edit Product </h3>
+
+@if (productObj != null)
+{
+    <EditForm Model="productObj" OnSubmit="Save">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+        <div>
+            <label>Name</label>
+            <InputText @bind-Value= "productObj.Name" class="form form-control"></InputText>
+            <ValidationMessage For="()=> productObj.Name"></ValidationMessage>
+        </div>
+        <div>
+            <label>Price</label>
+            <InputNumber @bind-Value="productObj.Price" class="form form-control"></InputNumber>
+            <ValidationMessage For="()=> productObj.Price"></ValidationMessage>
+
+        </div>
+        <div>
+            <label>Description</label>
+            <InputText @bind-Value="productObj.Description" class="form form-control"></InputText>
+        </div>
+        <div>
+            <label>Description</label>
+            <InputText @bind-Value="productObj.Image" class="form form-control"></InputText>
+        </div>
+        <div>
+            <label>Category</label>
+            <select @bind="productObj.CatId" class="form form-control">
+                @foreach (var category in categories)
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            </select>
+        </div>
+        <br/>
+        <input type="submit" class="btn btn-success" value="Save"/>
+    </EditForm>
+
+}
+else
+{
+    <h1>invalid id</h1>
+}
+
+@code {
+    [Parameter]
+    public int id{ set; get; }
+
+    [Inject]
+    public ProductService productService{ set; get; }
+
+    [Inject]
+    public CategoryService categoryService{ set; get; }
+
+    public List<Category> categories { get; set; }
+
+    public Product productObj { set; get; }
+
+    protected override void OnInitialized()
+    {
+        productObj = productService.GetProductById(id);
+        categories = categoryService.GetAllCategories();
+        base.OnInitialized();
+    }
+
+    void Save()
+    {
+        Console.WriteLine("Done");
+        navManager.NavigateTo("/produc/allproduct");
+    }
+
+}

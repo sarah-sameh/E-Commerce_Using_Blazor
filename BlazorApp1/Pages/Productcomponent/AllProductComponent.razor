@@ -1,0 +1,46 @@
+﻿@page "/produc/allproduct"
+
+
+
+<h3>All Products</h3>
+<hr/>
+
+<div class="row">
+    @foreach (var product in products)
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card shadow">
+                <div class="card-body">
+                    <img src="/img/@product.Image" style="width:100px" />
+                    <h5 class="card-title">@product.Name</h5>
+                    <p class="card-text">Price: @product.Price$</p>
+                    <p class="card-text">@product.Description</p>
+                    <p class="card-text" style="font-weight:700; font-style:italic">Category: @categoryService.GetCategoryName(product.CatId)</p>
+                    <a href="/produc/details/@product.Id" class="btn btn-dark">Details</a>
+                    <a href="/produc/edit/@product.Id" class="btn btn-warning">Edit</a>
+                </div>
+            </div>
+        </div>
+
+       
+    }
+</div>
+
+@code {
+
+
+    [Inject]
+    public ProductService productService{ set; get; }
+    [Inject]
+    public CategoryService categoryService{ set; get; }
+
+    public List<Category> categories{ set; get; }
+    public List<Product> products{ set; get; }
+    protected override void OnInitialized()
+    {
+        products = productService.GetAllProducts();
+        categories = categoryService.GetAllCategories();
+        base.OnInitialized();
+    }
+
+}

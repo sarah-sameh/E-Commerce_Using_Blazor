@@ -1,0 +1,82 @@
+﻿@page "/prdApi/Add"
+@inject NavigationManager navManager
+<h3>Add Product</h3>
+
+@if (productObj != null)
+{
+    <EditForm Model="productObj" OnValidSubmit="Save" OnInvalidSubmit="NotSave">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+        <div>
+            <label>Name</label>
+            <InputText @bind-Value="productObj.Name" class="form form-control"></InputText>
+            <ValidationMessage For="()=>productObj.Name"></ValidationMessage>
+        </div>
+        <div>
+            <label>Price</label>
+            <InputNumber @bind-Value="productObj.Price" class="form form-control"></InputNumber>
+            <ValidationMessage For="() => productObj.Price"></ValidationMessage>
+        </div>
+        <div>
+            <label>Description</label>
+            <InputText @bind-Value="productObj.Description" class="form form-control"></InputText>
+            <ValidationMessage For="()=>productObj.Description"></ValidationMessage>
+        </div>
+        <div>
+            <label>Image</label>
+            <InputText @bind-Value="productObj.Image" class="form form-control"></InputText>
+            <ValidationMessage For="()=>productObj.Image"></ValidationMessage>
+        </div>
+        <div>
+            <label>Category</label>
+            @if (categories != null)
+            {
+                <select @bind="productObj.CatId" class="form form-control">
+                    @foreach (var category in categories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+            }
+            else
+            {
+                <p>Loading categories...</p>
+            }
+        </div>
+        <br />
+        <input type="submit" class="btn btn-success" value="Save" />
+    </EditForm>
+}
+else
+{
+    <h1>Invalid product details</h1>
+}
+
+@code {
+    [Inject]
+    public IService<Product> productService { set; get; }
+
+    [Inject]
+    public IService<Category> categoryService { set; get; }
+
+    public List<Category> categories { get; set; }
+    public Product productObj { set; get; }  
+
+    protected override async Task OnInitializedAsync()
+    {
+        productObj =  new Product();
+        categories = await categoryService.GetAll();
+    }
+
+    public async Task Save()
+    {
+        await productService.Add(productObj);
+        Console.WriteLine("Product added successfully");
+        navManager.NavigateTo("/prdApi/allproduct");
+    }
+
+    public void NotSave()
+    {
+        Console.WriteLine("Product not saved");
+    }
+}
